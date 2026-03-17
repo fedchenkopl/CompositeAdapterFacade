@@ -1,8 +1,4 @@
 ﻿namespace CompositeAdapterFacade.Composite;
-
-/// <summary>
-/// Листовой узел (Leaf) - файл
-/// </summary>
 public class File : FileSystemItem
 {
     private readonly long _size;

@@ -10,10 +10,9 @@ class Program
     {
         Console.WriteLine("=== Лабораторная работа №5: Компоновщик, Адаптер, Фасад ===\n");
 
-        // ========== ЭТАП 1: Компоновщик (Composite) ==========
+        //ЭТАП 1: Компоновщик
         Console.WriteLine("--- 1. Создание структуры файлов (Composite) ---");
 
-        // Создаем папки и файлы
         var root = new Folder("root");
         var docs = new Folder("docs");
         var pictures = new Folder("pictures");
@@ -22,7 +21,6 @@ class Program
         var file3 = new Composite.File("photo.jpg", 2048);
         var file4 = new Composite.File("note.txt", 256);
 
-        // Строим дерево
         docs.Add(file1);
         docs.Add(file2);
         pictures.Add(file3);
@@ -30,45 +28,38 @@ class Program
         root.Add(pictures);
         root.Add(file4);
 
-        // Демонстрация работы Composite
         Console.WriteLine($"Размер root: {root.GetSize()} байт");
         Console.WriteLine($"Размер docs: {docs.GetSize()} байт");
         Console.WriteLine($"Содержимое root:");
         PrintContents(root, 1);
 
-        // ========== ЭТАП 2: Адаптер (Adapter) ==========
+        //ЭТАП 2: Адаптер
         Console.WriteLine("\n--- 2. Работа через адаптер (IFileSystem) ---");
 
-        // Создаем адаптер для нашей структуры
         IFileSystem fileSystem = new FileSystemAdapter(root);
 
-        // Получаем список корневой папки
         var rootItems = fileSystem.ListItems("root");
         Console.WriteLine($"Содержимое root (через адаптер): {string.Join(", ", rootItems)}");
 
-        // Читаем файл
         if (rootItems.Contains("readme.txt"))
         {
             var data = fileSystem.ReadFile("root/docs/readme.txt");
             Console.WriteLine($"Прочитан файл readme.txt, размер данных: {data.Length} байт");
         }
 
-        // Создаем целевую файловую систему для копирования
         var backupRoot = new Folder("backup");
         IFileSystem backupSystem = new FileSystemAdapter(backupRoot);
 
-        // ========== ЭТАП 3: Фасад (Facade) ==========
+        //ЭТАП 3: Фасад
         Console.WriteLine("\n--- 3. Использование фасада для синхронизации ---");
 
         var facade = new SyncFacade(fileSystem, backupSystem);
         facade.SyncFolder("root", "backup");
 
-        // Проверяем результат
         Console.WriteLine($"\nРазмер оригинального root: {root.GetSize()} байт");
         Console.WriteLine($"Размер backup: {backupRoot.GetSize()} байт");
     }
 
-    // Вспомогательный метод для рекурсивного вывода структуры
     static void PrintContents(Folder folder, int level)
     {
         var indent = new string(' ', level * 2);

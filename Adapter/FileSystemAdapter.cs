@@ -1,9 +1,5 @@
 ﻿using CompositeAdapterFacade.Composite;
 namespace CompositeAdapterFacade.Adapter;
-
-/// <summary>
-/// Адаптер (Adapter) - преобразует интерфейс Composite к IFileSystem
-/// </summary>
 public class FileSystemAdapter : IFileSystem
 {
     private readonly FileSystemItem _root;
@@ -31,7 +27,6 @@ public class FileSystemAdapter : IFileSystem
 
         if (item is Composite.File file)
         {
-            // Имитация чтения - возвращаем массив байт, заполненный размером файла
             return new byte[file.GetSize()];
         }
 
@@ -40,14 +35,11 @@ public class FileSystemAdapter : IFileSystem
 
     public void WriteFile(string path, byte[] data)
     {
-        // В нашей модели мы не храним реальное содержимое, 
-        // поэтому просто находим файл и "записываем" данные
         var item = FindItem(path);
 
         if (item is Composite.File file)
         {
             Console.WriteLine($"Записано {data.Length} байт в файл {file.Name}");
-            // В реальном приложении здесь было бы обновление содержимого
         }
         else
         {
@@ -57,7 +49,6 @@ public class FileSystemAdapter : IFileSystem
 
     public void DeleteItem(string path)
     {
-        // Для удаления нужно знать родителя
         var parentPath = GetParentPath(path);
         var itemName = GetItemName(path);
 
@@ -71,8 +62,6 @@ public class FileSystemAdapter : IFileSystem
         parent.Remove(itemToDelete);
         Console.WriteLine($"Удален элемент: {path}");
     }
-
-    // Вспомогательные методы для навигации по дереву
     private FileSystemItem FindItem(string path)
     {
         if (string.IsNullOrEmpty(path) || path == _root.Name)

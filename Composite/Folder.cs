@@ -1,8 +1,4 @@
 ﻿namespace CompositeAdapterFacade.Composite;
-
-/// <summary>
-/// Составной узел (Composite) - папка
-/// </summary>
 public class Folder : FileSystemItem
 {
     private readonly List<FileSystemItem> _children = new();
@@ -13,7 +9,6 @@ public class Folder : FileSystemItem
 
     public override long GetSize()
     {
-        // Рекурсивно суммируем размеры всех дочерних элементов
         return _children.Sum(child => child.GetSize());
     }
 
@@ -33,7 +28,5 @@ public class Folder : FileSystemItem
             return _children[index];
         return null;
     }
-
-    // Дополнительный метод для получения всех детей (нужен для адаптера)
     public IReadOnlyList<FileSystemItem> GetChildren() => _children;
 }

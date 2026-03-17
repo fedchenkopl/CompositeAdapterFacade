@@ -1,8 +1,4 @@
 ﻿namespace CompositeAdapterFacade.Adapter;
-
-/// <summary>
-/// Целевой интерфейс (Target), с которым работает клиент и фасад
-/// </summary>
 public interface IFileSystem
 {
     List<string> ListItems(string path);

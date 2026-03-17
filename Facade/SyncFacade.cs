@@ -1,10 +1,6 @@
 ﻿using CompositeAdapterFacade.Adapter;
 
 namespace CompositeAdapterFacade.Facade;
-
-/// <summary>
-/// Фасад (Facade) - предоставляет простой интерфейс для сложных операций
-/// </summary>
 public class SyncFacade
 {
     private readonly IFileSystem _source;
@@ -15,10 +11,6 @@ public class SyncFacade
         _source = source;
         _target = target;
     }
-
-    /// <summary>
-    /// Синхронизирует содержимое исходной папки с целевой
-    /// </summary>
     public void SyncFolder(string sourcePath, string targetPath)
     {
         Console.WriteLine($"Начало синхронизации: {sourcePath} -> {targetPath}");
@@ -34,8 +26,6 @@ public class SyncFacade
 
                 try
                 {
-                    // В реальном приложении здесь нужно проверять, файл это или папка
-                    // Для простоты считаем всё файлами
                     var data = _source.ReadFile(sourceItemPath);
                     _target.WriteFile(targetItemPath, data);
                     Console.WriteLine($"  + {item} синхронизирован");
@@ -53,19 +43,13 @@ public class SyncFacade
             Console.WriteLine($"Ошибка синхронизации: {ex.Message}");
         }
     }
-
-    /// <summary>
-    /// Создает резервную копию исходной папки
-    /// </summary>
     public void Backup(string sourcePath, string backupPath)
     {
         Console.WriteLine($"Создание резервной копии: {sourcePath} -> {backupPath}");
 
-        // Добавляем временную метку к имени папки бэкапа
         var timestamp = DateTime.Now.ToString("yyyyMMdd_HHmmss");
         var fullBackupPath = CombinePath(backupPath, $"backup_{timestamp}");
 
-        // Используем ту же логику синхронизации
         SyncFolder(sourcePath, fullBackupPath);
 
         Console.WriteLine("Резервное копирование завершено.\n");
